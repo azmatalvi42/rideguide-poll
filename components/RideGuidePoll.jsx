@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
-import { emptyStats, statsFromRows } from "@/lib/stats";
+import { emptyStats } from "@/lib/stats";
 
 /* ============================================================
    RideGuide Transit Poll
@@ -976,7 +976,6 @@ function Dashboard({ onBack, myNumber }) {
   const [lastAt, setLastAt] = useState(null);
   const [fresh, setFresh] = useState(0);
   const [tick, setTick] = useState(Date.now());
-  const [sample, setSample] = useState(false);
   const baseline = useRef(null);
   const alive = useRef(true);
 
@@ -1020,8 +1019,7 @@ function Dashboard({ onBack, myNumber }) {
     };
   }, [pull]);
 
-  const sampleStats = useMemo(() => statsFromRows(SAMPLE_ROWS), []);
-  const d = sample ? sampleStats : stats || emptyStats();
+  const d = stats || emptyStats();
   const n = d.n;
 
   const avg = d.rating_n ? (d.rating_sum / d.rating_n).toFixed(1) : "\u2014";
@@ -1046,15 +1044,10 @@ function Dashboard({ onBack, myNumber }) {
       </h1>
       <p style={{ fontSize: 15, color: T.muted, margin: "0 0 10px" }}>
         {n === 0 ? "No responses yet." : n + " response" + (n === 1 ? "" : "s") + " so far."}
-        {myNumber && !sample ? " You were number " + myNumber + "." : ""}
+        {myNumber ? " You were number " + myNumber + "." : ""}
       </p>
 
-      <LiveStatus status={sample ? "live" : status} lastAt={lastAt} fresh={sample ? 0 : fresh} tick={tick} onRefresh={() => pull({ force: true })} />
-
-      <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14, marginBottom: 16, cursor: "pointer" }}>
-        <input type="checkbox" checked={sample} onChange={(e) => setSample(e.target.checked)} style={{ width: 20, height: 20 }} />
-        Show sample data so you can see the shape of it
-      </label>
+      <LiveStatus status={status} lastAt={lastAt} fresh={fresh} tick={tick} onRefresh={() => pull({ force: true })} />
 
       {n === 0 ? (
         <div style={{ background: T.surface, border: `2px dashed ${T.hairline}`, borderRadius: 16, padding: 22, textAlign: "center" }}>
@@ -1155,27 +1148,6 @@ const findLabel = (qid, oid) => {
   return o ? o.label : oid;
 };
 const frustrationLabel = (id) => findLabel("frustrations", id);
-
-/* synthetic rows, clearly labelled in the UI, so the dashboard reads properly before real data exists */
-const SAMPLE_ROWS = (() => {
-  const rnd = (arr, k) => arr.slice().sort(() => Math.random() - 0.5).slice(0, k);
-  const appIds = APPS.filter((a) => !a.exclusive).map((a) => a.id);
-  const frus = QUESTIONS.find((q) => q.id === "frustrations").options.map((o) => o.id);
-  const out = [];
-  for (let i = 0; i < 42; i++) {
-    const apps = rnd(appIds, 1 + Math.floor(Math.random() * 3));
-    const weighted = Math.random() < 0.45 ? "google_maps" : Math.random() < 0.5 ? "transit_app" : apps[0];
-    out.push({
-      response_id: "sample-" + i,
-      apps: apps.includes(weighted) ? apps : [weighted, ...apps],
-      primary_app: weighted,
-      rating: 3 + Math.floor(Math.random() * 7),
-      frustrations: rnd(frus, 2 + Math.floor(Math.random() * 4)),
-      improvements: rnd(IMPROVEMENTS.map((x) => x.id), 5),
-    });
-  }
-  return out;
-})();
 
 /* ---------------- app shell ---------------- */
 

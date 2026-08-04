@@ -70,5 +70,40 @@
     "submitted_at": "2026-08-04T18:20:55.482Z",
     "ip_hash": "cef3e6b80ac2d3b8d62af8785a205257",
     "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  {
+    "response_id": "r_msf12jz2_72yucx",
+    "version": "poll_v1",
+    "frequency": "daily",
+    "agencies": [
+      "ttc",
+      "go",
+      "miway"
+    ],
+    "apps": [
+      "moovit"
+    ],
+    "primary_app": "moovit",
+    "no_app_reason": null,
+    "rating": 8,
+    "frustrations": [
+      "wrong_arrivals",
+      "late_delays",
+      "no_explanation",
+      "no_fares"
+    ],
+    "improvements": [
+      "multi_agency_support",
+      "multimodal",
+      "safety_info",
+      "crowding_info",
+      "personal_alerts"
+    ],
+    "one_fix": null,
+    "no_app_user": false,
+    "completed": true,
+    "submitted_at": "2026-08-04T19:05:07.112Z",
+    "ip_hash": "cef3e6b80ac2d3b8d62af8785a205257",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.131.0 Chrome/148.0.7778.280 Electron/42.7.0 Safari/537.36"
   }
 ]
