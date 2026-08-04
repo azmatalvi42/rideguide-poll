@@ -1,0 +1,74 @@
+[
+  {
+    "response_id": "r_mseza4lj_w72pvj",
+    "version": "poll_v1",
+    "frequency": "daily",
+    "agencies": [
+      "ttc",
+      "go",
+      "miway",
+      "brampton"
+    ],
+    "apps": [
+      "google_maps",
+      "apple_maps"
+    ],
+    "primary_app": "google_maps",
+    "no_app_reason": null,
+    "rating": 8,
+    "frustrations": [
+      "wrong_arrivals",
+      "late_delays",
+      "hidden_cancellations",
+      "weak_accessibility",
+      "no_crowding"
+    ],
+    "improvements": [
+      "accurate_arrivals",
+      "early_warnings",
+      "better_alternates",
+      "cleaner_ui",
+      "fewer_ads"
+    ],
+    "one_fix": null,
+    "no_app_user": false,
+    "completed": true,
+    "submitted_at": "2026-08-04T18:15:01.136Z",
+    "ip_hash": "cef3e6b80ac2d3b8d62af8785a205257",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  },
+  {
+    "response_id": "r_msezhq0t_in2ni0",
+    "version": "poll_v1",
+    "frequency": "daily",
+    "agencies": [
+      "ttc",
+      "go",
+      "miway"
+    ],
+    "apps": [
+      "google_maps",
+      "apple_maps"
+    ],
+    "primary_app": "google_maps",
+    "no_app_reason": null,
+    "rating": 8,
+    "frustrations": [
+      "late_delays",
+      "battery"
+    ],
+    "improvements": [
+      "multimodal",
+      "safety_info",
+      "crowding_info",
+      "accurate_arrivals",
+      "early_warnings"
+    ],
+    "one_fix": null,
+    "no_app_user": false,
+    "completed": true,
+    "submitted_at": "2026-08-04T18:20:55.482Z",
+    "ip_hash": "cef3e6b80ac2d3b8d62af8785a205257",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+  }
+]

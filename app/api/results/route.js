@@ -1,32 +1,27 @@
 import { NextResponse } from "next/server";
-import { serviceClient } from "@/lib/supabase";
+import { readResponses } from "@/lib/store";
 import { statsFromRows } from "@/lib/stats";
 
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * Postgres is the source of truth, so every call recounts from the rows.
+ * The JSON file is the source of truth, so every call recounts from the rows.
  * No running tally to drift, and no free text ever leaves the server.
  */
 export async function GET() {
-  let supa;
+  let rows;
   try {
-    supa = serviceClient();
+    rows = await readResponses();
   } catch (e) {
-    return NextResponse.json({ error: "storage not configured" }, { status: 503 });
+    return NextResponse.json({ error: "could not read results" }, { status: 500 });
   }
 
-  const { data, error } = await supa
-    .from("poll_responses")
-    .select("response_id, submitted_at, frequency, agencies, apps, primary_app, no_app_reason, rating, frustrations, improvements, no_app_user")
-    .eq("completed", true)
-    .order("submitted_at", { ascending: false })
-    .limit(5000);
+  const completed = rows
+    .filter((r) => r.completed)
+    .sort((a, b) => (a.submitted_at < b.submitted_at ? -1 : 1));
 
-  if (error) return NextResponse.json({ error: "could not read results" }, { status: 500 });
-
-  const rows = (data || []).slice().reverse();
-  const stats = statsFromRows(rows);
+  const stats = statsFromRows(completed);
   stats.updated_at = new Date().toISOString();
 
   return NextResponse.json(stats, { headers: { "cache-control": "no-store" } });

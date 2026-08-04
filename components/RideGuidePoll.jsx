@@ -1323,7 +1323,10 @@ export default function RideGuidePoll() {
 
   return (
     <div className="rg-root" style={{ background: T.paper, color: T.ink, minHeight: "100vh", width: "100%" }}>
-      <style>{FONT_CSS}</style>
+      {/* dangerouslySetInnerHTML because <style> is a raw-text element: SSR
+          escapes text children (' -> &#x27;) but the browser never decodes
+          entities inside <style>, so hydration sees mismatched text */}
+      <style dangerouslySetInnerHTML={{ __html: FONT_CSS }} />
       <div
         ref={topRef}
         style={{ maxWidth: 560, margin: "0 auto", minHeight: "100vh", background: T.paper, position: "relative", overflowY: "auto" }}
