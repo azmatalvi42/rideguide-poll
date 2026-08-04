@@ -69,9 +69,16 @@ input[type=range].rg-range::-moz-range-thumb { height: 34px; width: 34px; border
 .rg-new { animation: rg-pop 420ms cubic-bezier(.2,.9,.3,1.4) both; }
 @keyframes rg-pop { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: none; } }
 
+/* the quote ticker: the track holds two copies of the quotes, so sliding it
+   by exactly half its width wraps seamlessly */
+.rg-ticker-track { animation: rg-ticker linear infinite; }
+@keyframes rg-ticker { from { transform: translate3d(0,0,0); } to { transform: translate3d(-50%,0,0); } }
+.rg-ticker:hover .rg-ticker-track { animation-play-state: paused; }
+
 @media (prefers-reduced-motion: reduce) {
-  .rg-screen, .rg-screen-back, .rg-marker, .rg-draw, .rg-bar, .rg-card, .rg-live, .rg-new { animation: none !important; transition: none !important; }
+  .rg-screen, .rg-screen-back, .rg-marker, .rg-draw, .rg-bar, .rg-card, .rg-live, .rg-new, .rg-ticker-track { animation: none !important; transition: none !important; }
   .rg-draw { stroke-dashoffset: 0; }
+  .rg-ticker { overflow-x: auto !important; }
 }
 `;
 
@@ -83,7 +90,7 @@ const APPS = [
   { id: "transit_app", label: "Transit", mark: "T", tint: "#00A08A" },
   { id: "citymapper", label: "Citymapper", mark: "C", tint: "#0A9E4E" },
   { id: "moovit", label: "Moovit", mark: "M", tint: "#F26722" },
-  { id: "agency_app", label: "My transit agency's own app", mark: "A", tint: "#0E3B37" },
+  { id: "agency_app", label: "My transit agency's own app/website", mark: "A", tint: "#0E3B37" },
   { id: "rideshare", label: "Uber or Lyft, for transit connections", mark: "U", tint: "#1D1D1F" },
   { id: "other_app", label: "Something else", mark: "?", tint: "#5C716D" },
   { id: "no_app", label: "I don't really use a transit app", mark: "\u2014", tint: "#5C716D", exclusive: true },
@@ -970,6 +977,50 @@ function LiveStatus({ status, lastAt, fresh, onRefresh, tick }) {
   );
 }
 
+/* auto-scrolling strip of "one fix" answers; hover pauses it, reduced motion
+   turns it into a plain scrollable row */
+function QuoteTicker({ quotes }) {
+  const list = (quotes || []).filter(Boolean);
+  if (list.length === 0) return null;
+  const chars = list.reduce((s, q) => s + q.length, 0);
+  const secs = Math.max(18, Math.round(chars / 5));
+  const clip = (q) => (q.length > 140 ? q.slice(0, 140).trimEnd() + "…" : q);
+  const fade = "linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)";
+  return (
+    <section aria-label="What riders would fix, in their own words" style={{ marginBottom: 14 }}>
+      <div className="rg-label" style={{ fontSize: 10, color: T.green, marginBottom: 8 }}>
+        In their own words
+      </div>
+      <div className="rg-ticker" style={{ overflow: "hidden", maskImage: fade, WebkitMaskImage: fade }}>
+        <div className="rg-ticker-track" style={{ display: "flex", width: "max-content", animationDuration: secs + "s" }}>
+          {[0, 1].map((copy) => (
+            <div key={copy} aria-hidden={copy === 1} style={{ display: "flex", width: "max-content" }}>
+              {list.map((q, i) => (
+                <span
+                  key={i}
+                  style={{
+                    whiteSpace: "nowrap",
+                    marginRight: 12,
+                    padding: "10px 16px",
+                    borderRadius: 999,
+                    border: `1.5px solid ${T.hairline}`,
+                    background: T.surface,
+                    color: T.ink,
+                    fontSize: 14.5,
+                    fontWeight: 500,
+                  }}
+                >
+                  {"“"}{clip(q)}{"”"}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Dashboard({ onBack, myNumber }) {
   const [stats, setStats] = useState(null);
   const [status, setStatus] = useState("loading");
@@ -1069,6 +1120,8 @@ function Dashboard({ onBack, myNumber }) {
               </div>
             </div>
           </div>
+
+          <QuoteTicker quotes={d.quotes} />
 
           <Panel title="Coming in now" note="the last few responses, nothing identifying">
             {(d.recent || []).length === 0 ? (
@@ -1252,10 +1305,12 @@ export default function RideGuidePoll() {
       const res = await submitResponse(record);
       if (res && res.n) setMyNumber(res.n);
       setSaveState("done");
+      clearProgress();
     } catch (e) {
+      /* keep the saved progress so the answers really do stay on this device
+         and can be resubmitted after a reload */
       setSaveState("error");
     }
-    clearProgress();
   };
 
   const startFresh = () => {

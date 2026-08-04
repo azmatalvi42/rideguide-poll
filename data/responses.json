@@ -105,5 +105,44 @@
     "submitted_at": "2026-08-04T19:05:07.112Z",
     "ip_hash": "cef3e6b80ac2d3b8d62af8785a205257",
     "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.131.0 Chrome/148.0.7778.280 Electron/42.7.0 Safari/537.36"
+  },
+  {
+    "response_id": "r_msf1q8kz_ptamz2",
+    "version": "poll_v1",
+    "frequency": "weekly",
+    "agencies": [
+      "ttc",
+      "go",
+      "brampton"
+    ],
+    "apps": [
+      "citymapper",
+      "transit_app",
+      "apple_maps",
+      "google_maps"
+    ],
+    "primary_app": "google_maps",
+    "no_app_reason": null,
+    "rating": 6,
+    "frustrations": [
+      "wrong_arrivals",
+      "late_delays",
+      "hidden_cancellations",
+      "bad_transfers",
+      "no_explanation"
+    ],
+    "improvements": [
+      "multi_agency_support",
+      "multimodal",
+      "ai_assistant",
+      "fare_clarity",
+      "fewer_ads"
+    ],
+    "one_fix": "the transit app hides the best features behind a paywall :(",
+    "no_app_user": false,
+    "completed": true,
+    "submitted_at": "2026-08-04T19:23:32.084Z",
+    "ip_hash": "cef3e6b80ac2d3b8d62af8785a205257",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.131.0 Chrome/148.0.7778.280 Electron/42.7.0 Safari/537.36"
   }
 ]

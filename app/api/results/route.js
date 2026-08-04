@@ -24,5 +24,12 @@ export async function GET() {
   const stats = statsFromRows(completed);
   stats.updated_at = new Date().toISOString();
 
+  /* answers to the optional "one fix" question, newest first, for the quote ticker */
+  stats.quotes = completed
+    .map((r) => (typeof r.one_fix === "string" ? r.one_fix.replace(/\s+/g, " ").trim() : ""))
+    .filter(Boolean)
+    .slice(-30)
+    .reverse();
+
   return NextResponse.json(stats, { headers: { "cache-control": "no-store" } });
 }
